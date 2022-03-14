@@ -1,8 +1,9 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect, useState, FormEvent } from "react";
 import { Form, Button } from "react-bootstrap";
 import InputMask from "react-input-mask";
 import { api } from "../../services/api";
+import { NewSessionModal } from "../NewSessionModal";
 
 import { Container } from "./styles";
 
@@ -17,13 +18,15 @@ export function NewSessionForm() {
   const [street, setStreet] = useState("");
   const [number, setNumber] = useState(0);
   const [complement, setComplement] = useState("");
-  const [days, setDays] = useState("");
+  // const [dateTime, setDateTime] = useState("");
+  const [isNewSessionModalOpen, setIsNewSessionModalOpen] = useState(false);
+  const [calendar, setCalendar] = useState([]);
 
-  const dataSessions = {
+  const dataSession = {
     name,
     email,
     phone,
-    date_time: "2022-03-21T15:00:00.00+03:00",
+    // date_time: dateTime,
     city,
     neighborhood,
     street,
@@ -31,24 +34,23 @@ export function NewSessionForm() {
     complement,
   };
 
-  function handleSessionCalendar() {
-    axios
-      .get(`https://interview.piperz.com.br/api/calendar/porto-alegre${city}`)
-      .then((response) => console.log(response.data));
+  function handleCloseNewSessionModal() {
+    setIsNewSessionModalOpen(false);
   }
 
-  async function handleCreateSession() {
-    const response = await axios.post(
-      "https://interview.piperz.com.br/api/sessions",
-      dataSessions
-    );
-    console.log(response.data);
+  function handleSessionCalendar(event: FormEvent) {
+    event.preventDefault();
+
+    setIsNewSessionModalOpen(true);
+
+    axios.get(`https://interview.piperz.com.br/api/calendar/${city}`)
+      .then(response => setCalendar(response.data))
   }
 
   return (
     <Container>
       <h1>Informe todos os dados abaixo </h1>
-      <Form>
+      <Form onSubmit={handleSessionCalendar}>
         <Group className="mb-3">
           <Label>Nome:</Label>
           <Control
@@ -138,14 +140,16 @@ export function NewSessionForm() {
           />
         </Group>
 
-        <Button
-          variant="primary"
-          type="button"
-          onClick={() => handleCreateSession()}
-        >
+        <Button variant="primary" type="submit">
           Continuar
         </Button>
       </Form>
+      <NewSessionModal
+        isOpen={isNewSessionModalOpen}
+        onRequestClose={handleCloseNewSessionModal}
+        sessionInput={dataSession}
+        calendar={calendar}
+      />
     </Container>
   );
 }
