@@ -33,6 +33,15 @@ export function NewSessionForm() {
 
   function handleCloseNewSessionModal() {
     setIsNewSessionModalOpen(false);
+
+    setName('');
+    setEmail('');
+    setPhone('');
+    setCity('');
+    setNeighborhood('');
+    setStreet('');
+    setNumber(0);
+    setComplement('');
   }
 
   function handleSessionCalendar(event: FormEvent) {
