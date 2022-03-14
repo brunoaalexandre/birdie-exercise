@@ -1,8 +1,7 @@
 import axios from "axios";
-import { useEffect, useState, FormEvent } from "react";
+import { useState, FormEvent } from "react";
 import { Form, Button } from "react-bootstrap";
 import InputMask from "react-input-mask";
-import { api } from "../../services/api";
 import { NewSessionModal } from "../NewSessionModal";
 
 import { Container } from "./styles";
@@ -18,7 +17,6 @@ export function NewSessionForm() {
   const [street, setStreet] = useState("");
   const [number, setNumber] = useState(0);
   const [complement, setComplement] = useState("");
-  // const [dateTime, setDateTime] = useState("");
   const [isNewSessionModalOpen, setIsNewSessionModalOpen] = useState(false);
   const [calendar, setCalendar] = useState([]);
 
@@ -26,7 +24,6 @@ export function NewSessionForm() {
     name,
     email,
     phone,
-    // date_time: dateTime,
     city,
     neighborhood,
     street,
@@ -43,8 +40,9 @@ export function NewSessionForm() {
 
     setIsNewSessionModalOpen(true);
 
-    axios.get(`https://interview.piperz.com.br/api/calendar/${city}`)
-      .then(response => setCalendar(response.data))
+    axios
+      .get(`https://interview.piperz.com.br/api/calendar/${city}`)
+      .then((response) => setCalendar(response.data));
   }
 
   return (

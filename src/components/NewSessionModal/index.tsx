@@ -29,8 +29,6 @@ export function NewSessionModal({
   sessionInput,
   calendar,
 }: NewSessionModalProps) {
-  // const [days, setDays] = useState([]);
-  // const [currentDay, setCurrentDay] = useState<any>();
   const currentDay = useRef<any>();
   const currentHourDate = useRef<any>();
   const [hours, setHours] = useState<any | null>([]);
@@ -40,10 +38,13 @@ export function NewSessionModal({
   async function handleCreateSession() {
     const sessionData = {
       ...sessionInput,
-      date_time: `${currentDay.current}T${currentHourDate.current}:00.00+03:00`
-    }
+      date_time: `${currentDay.current}T${currentHourDate.current}:00.00+03:00`,
+    };
 
-    await axios.post("https://interview.piperz.com.br/api/sessions", sessionData);
+    await axios.post(
+      "https://interview.piperz.com.br/api/sessions",
+      sessionData
+    );
     onRequestClose();
   }
 
@@ -81,11 +82,15 @@ export function NewSessionModal({
         <Label style={{ marginTop: "30px" }}>
           Escolha o melhor horário para você:
         </Label>
-        <Select onChange={(e) => {
-          currentHourDate.current = e.target.value
-        }}>
+        <Select
+          onChange={(e) => {
+            currentHourDate.current = e.target.value;
+          }}
+        >
           {!hours[1] ? (
-            <option value="" selected >Selecione um horário</option>
+            <option value="" selected>
+              Selecione um horário
+            </option>
           ) : (
             hours[1].map((hour: any) => <option value={hour}>{hour}</option>)
           )}
